@@ -90,4 +90,11 @@ exports.deleteFollowing = async (req, res, next) => {
 
 exports.deleteFollower = async (req, res) => {
 	const { followId } = req.body;
+
+	const user = await User.findOneAndUpdate(
+		{ _id: followId },
+		{ $pull: { followers: req.user._id } },
+		{ new: true }
+	);
+	res.json(user);
 };

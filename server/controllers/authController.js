@@ -22,6 +22,13 @@ exports.validateSignup = (req, res, next) => {
 	req
 		.checkBody("name", "Name must be between 4 and 10 characters")
 		.isLength({ min: 4, max: 10 });
+
+	const errors = req.validationErrors();
+	if (errors) {
+		const firstError = errors.map((error) => error.msg)[0];
+		return res.status(400).send(firstError);
+	}
+	next();
 };
 
 exports.signup = () => {};

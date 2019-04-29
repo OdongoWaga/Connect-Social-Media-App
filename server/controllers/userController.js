@@ -6,6 +6,8 @@ exports.getUsers = async (req, res) => {
 	res.json(users);
 };
 
+exports.getAuthUser = () => { };
+
 exports.getUserById = async (req, res, next, id) => {
 	const user = await User.findOne({ _id: id });
 	req.profile = user;
@@ -19,7 +21,7 @@ exports.getUserById = async (req, res, next, id) => {
 	next();
 };
 
-exports.getAuthUser = () => {};
+
 
 exports.getUserProfile = () => {};
 

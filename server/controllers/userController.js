@@ -6,7 +6,15 @@ exports.getUsers = async (req, res) => {
 	res.json(users);
 };
 
-exports.getAuthUser = () => { };
+exports.getAuthUser = (req, res) => {
+	if (!req.isAuthUser) {
+		res.status(403).json({
+			message: "You are unauthenticated. Please sign in or signup"
+		});
+		return res.redirect("/signin");
+	}
+	res.json(req.user);
+};
 
 exports.getUserById = async (req, res, next, id) => {
 	const user = await User.findOne({ _id: id });
@@ -21,9 +29,14 @@ exports.getUserById = async (req, res, next, id) => {
 	next();
 };
 
-
-
-exports.getUserProfile = () => {};
+exports.getUserProfile = (req, res) => {
+	if (!req.profile) {
+		return res.status(404).json({
+			message: "No user found"
+		});
+	}
+	res.json(req.profile);
+};
 
 exports.getUserFeed = () => {};
 

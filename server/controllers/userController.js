@@ -24,7 +24,7 @@ exports.getUserById = async (req, res, next, id) => {
 
 	const profileId = mongoose.Types.ObjectId(req.profile._id);
 
-	if (profileId.equals(req.user._id)) {
+	if (req.user && profileId.equals(req.user._id)) {
 		req.isAuthUser = true;
 		return next();
 	}
@@ -74,7 +74,7 @@ exports.resizeAvatar = async (req, res, next) => {
 	}
 
 	const extension = req.file.mimetype.split("/")[1];
-	req.body.avatar = `/static/uplaods/avatars/${
+	req.body.avatar = `/static/uploads/avatars/${
 		req.user.name
 	}- ${Date.now()}.${extension}`;
 	const image = await jimp.read(req.file.buffer);

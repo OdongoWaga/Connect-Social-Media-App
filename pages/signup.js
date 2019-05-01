@@ -21,8 +21,13 @@ class Signup extends React.Component {
 	state = {
 		name: "",
 		email: "",
-		password: ""
+		password: "",
+		error: "",
+		openError: false,
+		createdUser: ""
 	};
+
+	handleClose = () => this.setState({ openError: false });
 
 	handleChange = (e) => {
 		this.setState({ [e.target.name]: e.target.value });
@@ -38,11 +43,19 @@ class Signup extends React.Component {
 			email,
 			password
 		};
-		signupUser(user);
+		signupUser(user)
+			.then((createdUser) => {
+				this.setState({
+					createdUser,
+					error: ""
+				});
+			})
+			.catch(this.showError);
 	};
 
 	render() {
 		const { classes } = this.props;
+		const { error, openError } = this.state;
 
 		return (
 			<div className={classes.root}>
@@ -81,6 +94,20 @@ class Signup extends React.Component {
 							Sign Up
 						</Button>
 					</form>
+
+					{/* Error Snackbar */}
+					{
+						<Snackbar
+							anchorOrigin={{
+								vertical: "bottom",
+								horizontal: "right"
+							}}
+							open={openError}
+							onClose={this.handleClose}
+							autoHideDuration={6000}
+							message={<span className={classes.snack}>{error}</span>}
+						/>
+					}
 				</Paper>
 			</div>
 		);

@@ -58,7 +58,7 @@ exports.signin = (req, res, next) => {
 			if (err) {
 				return res.status(500).json(err.message);
 			}
-			res.json(user.name);
+			res.json(user);
 		});
 	})(req, res, next);
 };

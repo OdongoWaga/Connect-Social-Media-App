@@ -15,7 +15,13 @@ import Slide from "@material-ui/core/Slide";
 import Gavel from "@material-ui/icons/Gavel";
 import VerifiedUserTwoTone from "@material-ui/icons/VerifiedUserTwoTone";
 import withStyles from "@material-ui/core/styles/withStyles";
+import Link from "next/link";
+
 import { signupUser } from "../lib/auth";
+
+function Transition(props) {
+	return <Slide direction="up" {...props} />;
+}
 
 class Signup extends React.Component {
 	state = {
@@ -31,8 +37,8 @@ class Signup extends React.Component {
 
 	handleClose = () => this.setState({ openError: false });
 
-	handleChange = (e) => {
-		this.setState({ [e.target.name]: e.target.value });
+	handleChange = (event) => {
+		this.setState({ [event.target.name]: event.target.value });
 	};
 
 	handleSubmit = (event) => {
@@ -55,12 +61,18 @@ class Signup extends React.Component {
 
 	showError = (err) => {
 		const error = (err.response && err.response.data) || err.message;
-		this.setState({ error, openError: true });
+		this.setState({ error, openError: true, isLoading: false });
 	};
 
 	render() {
 		const { classes } = this.props;
-		const { error, openError } = this.state;
+		const {
+			error,
+			openError,
+			openSuccess,
+			createdUser,
+			isLoading
+		} = this.state;
 
 		return (
 			<div className={classes.root}>
@@ -69,19 +81,20 @@ class Signup extends React.Component {
 						<Gavel />
 					</Avatar>
 					<Typography variant="h5" component="h1">
-						Sign Up
+						Sign up
 					</Typography>
+
 					<form onSubmit={this.handleSubmit} className={classes.form}>
 						<FormControl margin="normal" required fullWidth>
-							<InputLabel htmlFor="name"> Name </InputLabel>
+							<InputLabel htmlFor="name">Name</InputLabel>
 							<Input name="name" type="text" onChange={this.handleChange} />
 						</FormControl>
 						<FormControl margin="normal" required fullWidth>
-							<InputLabel htmlFor="email"> Email </InputLabel>
+							<InputLabel htmlFor="email">Email</InputLabel>
 							<Input name="email" type="email" onChange={this.handleChange} />
 						</FormControl>
 						<FormControl margin="normal" required fullWidth>
-							<InputLabel htmlFor="password"> Password </InputLabel>
+							<InputLabel htmlFor="password">Password</InputLabel>
 							<Input
 								name="password"
 								type="password"
@@ -93,10 +106,10 @@ class Signup extends React.Component {
 							fullWidth
 							variant="contained"
 							color="primary"
+							disabled={isLoading}
 							className={classes.submit}
 						>
-							{" "}
-							Sign Up
+							{isLoading ? "Signing up..." : "Sign up"}
 						</Button>
 					</form>
 
@@ -114,6 +127,30 @@ class Signup extends React.Component {
 						/>
 					)}
 				</Paper>
+
+				{/* Success Dialog */}
+				<Dialog
+					open={openSuccess}
+					disableBackdropClick={true}
+					TransitionComponent={Transition}
+				>
+					<DialogTitle>
+						<VerifiedUserTwoTone className={classes.icon} />
+						New Account
+					</DialogTitle>
+					<DialogContent>
+						<DialogContentText>
+							User {createdUser} successfully created!
+						</DialogContentText>
+					</DialogContent>
+					<DialogActions>
+						<Button color="primary" variant="contained">
+							<Link href="/signin">
+								<a className={classes.signinLink}>Sign in</a>
+							</Link>
+						</Button>
+					</DialogActions>
+				</Dialog>
 			</div>
 		);
 	}

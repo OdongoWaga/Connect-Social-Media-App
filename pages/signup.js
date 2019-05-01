@@ -23,8 +23,10 @@ class Signup extends React.Component {
 		email: "",
 		password: "",
 		error: "",
+		createdUser: "",
 		openError: false,
-		createdUser: ""
+		openSuccess: false,
+		isLoading: false
 	};
 
 	handleClose = () => this.setState({ openError: false });
@@ -33,24 +35,27 @@ class Signup extends React.Component {
 		this.setState({ [e.target.name]: e.target.value });
 	};
 
-	handleSubmit = (e) => {
+	handleSubmit = (event) => {
 		const { name, email, password } = this.state;
 
-		e.preventDefault();
-
-		const user = {
-			name,
-			email,
-			password
-		};
+		event.preventDefault();
+		const user = { name, email, password };
+		this.setState({ isLoading: true, error: "" });
 		signupUser(user)
 			.then((createdUser) => {
 				this.setState({
 					createdUser,
-					error: ""
+					error: "",
+					openSuccess: true,
+					isLoading: false
 				});
 			})
 			.catch(this.showError);
+	};
+
+	showError = (err) => {
+		const error = (err.response && err.response.data) || err.message;
+		this.setState({ error, openError: true });
 	};
 
 	render() {
@@ -96,7 +101,7 @@ class Signup extends React.Component {
 					</form>
 
 					{/* Error Snackbar */}
-					{
+					{error && (
 						<Snackbar
 							anchorOrigin={{
 								vertical: "bottom",
@@ -107,7 +112,7 @@ class Signup extends React.Component {
 							autoHideDuration={6000}
 							message={<span className={classes.snack}>{error}</span>}
 						/>
-					}
+					)}
 				</Paper>
 			</div>
 		);

@@ -15,6 +15,7 @@ import Slide from "@material-ui/core/Slide";
 import Gavel from "@material-ui/icons/Gavel";
 import VerifiedUserTwoTone from "@material-ui/icons/VerifiedUserTwoTone";
 import withStyles from "@material-ui/core/styles/withStyles";
+import { signupUser } from "../lib/auth";
 
 class Signup extends React.Component {
 	state = {

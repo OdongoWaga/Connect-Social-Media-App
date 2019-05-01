@@ -17,10 +17,72 @@ import VerifiedUserTwoTone from "@material-ui/icons/VerifiedUserTwoTone";
 import withStyles from "@material-ui/core/styles/withStyles";
 
 class Signup extends React.Component {
-	state = {};
+	state = {
+		name: "",
+		email: "",
+		password: ""
+	};
+
+	handleChange = (e) => {
+		this.setState({ [e.target.name]: e.target.value });
+	};
+
+	handleSubmit = (e) => {
+		const { name, email, password } = this.state;
+
+		e.preventDefault();
+
+		const user = {
+			name,
+			email,
+			password
+		};
+		signupUser(user);
+	};
 
 	render() {
-		return <div>Signup</div>;
+		const { classes } = this.props;
+
+		return (
+			<div className={classes.root}>
+				<Paper className={classes.paper}>
+					<Avatar className={classes.avatar}>
+						<Gavel />
+					</Avatar>
+					<Typography variant="h5" component="h1">
+						Sign Up
+					</Typography>
+					<form onSubmit={this.handleSubmit} className={classes.form}>
+						<FormControl margin="normal" required fullWidth>
+							<InputLabel htmlFor="name"> Name </InputLabel>
+							<Input name="name" type="text" onChange={this.handleChange} />
+						</FormControl>
+						<FormControl margin="normal" required fullWidth>
+							<InputLabel htmlFor="email"> Email </InputLabel>
+							<Input name="email" type="email" onChange={this.handleChange} />
+						</FormControl>
+						<FormControl margin="normal" required fullWidth>
+							<InputLabel htmlFor="password"> Password </InputLabel>
+							<Input
+								name="password"
+								type="password"
+								onChange={this.handleChange}
+							/>
+						</FormControl>
+						<Button
+							type="submit"
+							fullWidth
+							variant="contained"
+							color="primary"
+							className={classes.submit}
+						>
+							{" "}
+							Sign Up
+						</Button>
+					</form>
+				</Paper>
+			</div>
+		);
 	}
 }
 

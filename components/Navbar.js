@@ -25,7 +25,7 @@ const Navbar = ({ classes, router, pageProps: { auth } }) => {
 				>
 					<ActiveLink href="/">Connect</ActiveLink>
 				</Typography>
-				{!user._id ? (
+				{user._id ? (
 					// Auth Navigation
 					<div>
 						<Button>

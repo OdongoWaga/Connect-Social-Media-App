@@ -15,6 +15,7 @@ import withStyles from "@material-ui/core/styles/withStyles";
 import { getUser } from "../lib/api";
 import Link from "next/link";
 import FollowUser from "../components/profile/FollowUser";
+import DeleteUser from "../components/profile/DeleteUser";
 
 class Profile extends React.Component {
 	state = {

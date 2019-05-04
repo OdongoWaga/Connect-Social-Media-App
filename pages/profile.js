@@ -12,9 +12,21 @@ import Divider from "@material-ui/core/Divider";
 import Edit from "@material-ui/icons/Edit";
 import { authInitialProps } from "../lib/auth";
 import withStyles from "@material-ui/core/styles/withStyles";
+import { getUser } from "../lib/api";
 
 class Profile extends React.Component {
-	state = {};
+	state = {
+		user: null
+	};
+
+	componentDidMount() {
+		const { userId } = this.props;
+		getUser(userId).then((user) => {
+			this.setState({
+				user
+			});
+		});
+	}
 
 	render() {
 		return <div>Profile</div>;

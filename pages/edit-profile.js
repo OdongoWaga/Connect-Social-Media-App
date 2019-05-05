@@ -18,6 +18,7 @@ import EditSharp from "@material-ui/icons/EditSharp";
 import withStyles from "@material-ui/core/styles/withStyles";
 import { authInitialProps } from "../lib/auth";
 import { getAuthuser, updateUser } from "../lib/api";
+import Router from "next/router";
 
 class EditProfile extends React.Component {
 	state = {
@@ -27,6 +28,11 @@ class EditProfile extends React.Component {
 		about: "",
 		avatar: "",
 		avatarPreview: "",
+		openSuccess: "false",
+		openError: "false",
+		error: "",
+		updatedUser: "null",
+		isSaving: false,
 		isLoading: true
 	};
 
@@ -64,16 +70,39 @@ class EditProfile extends React.Component {
 
 	handleSubmit = (e) => {
 		e.preventDefault();
-		updateUser(this.state._id).then((updatedUser) => {
-			console.log(updatedUser);
-		});
+		this.setState({ isSaving: true });
+		updateUser(this.state._id)
+			.then((updatedUser) => {
+				this.setState({ updateUser, openSuccess: true });
+				setTimeout(() => Router.push(`/profile/${this.state._id}`), 6000);
+			})
+			.catch(this.showError);
 	};
 
 	createPreviewImage = (file) => URL.createObjectURL(file);
 
+	showError = (err) => {
+		const error = (err.response && err.response.data) || err.message;
+		this.setState({ error, openError: true, isSaving: false });
+	};
+
+	handleClose = () => this.setState({ openError: false });
+
 	render() {
 		const { classes } = this.props;
-		const { name, email, avatar, about, avatarPreview, isLoading } = this.state;
+		const {
+			name,
+			email,
+			avatar,
+			about,
+			avatarPreview,
+			isLoading,
+			isSaving,
+			updatedUser,
+			openError,
+			openSuccess,
+			error
+		} = this.state;
 
 		return (
 			<div className={classes.root}>
@@ -142,15 +171,41 @@ class EditProfile extends React.Component {
 						<Button
 							type="submit"
 							fullWidth
-							disabled={isLoading}
+							disabled={isLoading || isSaving}
 							variant="contained"
 							color="primary"
 							className={classes.submit}
 						>
-							Save
+							{isSaving ? "Saving..." : "Save"}
 						</Button>
 					</form>
 				</Paper>
+				{/* Error Snackbar */}
+				{error && (
+					<Snackbar
+						anchorOrigin={{
+							vertical: "bottom",
+							horizontal: "right"
+						}}
+						open={openError}
+						onClose={this.handleClose}
+						autoHideDuration={6000}
+						message={<span className={classes.snack}>{error}</span>}
+					/>
+				)}
+
+				{/* Success Dialog */}
+				<Dialog open={openSuccess} disableBackdropClick={true}>
+					<DialogTitle>
+						<VerifiedUserTwoTone className={classes.icon} />
+						Profile Updated
+					</DialogTitle>
+					<DialogContent>
+						<DialogContentText>
+							User {updatedUser && updatedUser.name} successfully updated!
+						</DialogContentText>
+					</DialogContent>
+				</Dialog>
 			</div>
 		);
 	}

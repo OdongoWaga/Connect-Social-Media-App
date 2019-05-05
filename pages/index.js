@@ -5,6 +5,7 @@ import Grid from "@material-ui/core/Grid";
 import Button from "@material-ui/core/Button";
 import withStyles from "@material-ui/core/styles/withStyles";
 import { authInitialProps } from "../lib/auth";
+import Router from "next/router";
 
 const Index = ({ classes, auth }) => (
 	<main className={classes.root}>
@@ -22,6 +23,22 @@ const Index = ({ classes, auth }) => (
 				<Typography component="h1" variant="h2" align="center" gutterBottom>
 					Reach Out
 				</Typography>
+				<Typography
+					variant="h6"
+					align="center"
+					color="textSecondary"
+					component="p"
+				>
+					This is a much better Social Network Powered by Next JS
+				</Typography>
+				<Button
+					className={classes.fabButton}
+					variant="extendedFab"
+					color="primary"
+					onClick={() => Router.push("/signup")}
+				>
+					Join Us
+				</Button>
 			</Grid>
 		)}
 	</main>

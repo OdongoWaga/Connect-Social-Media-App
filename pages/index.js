@@ -3,16 +3,17 @@ import Drawer from "@material-ui/core/Drawer";
 import Typography from "@material-ui/core/Typography";
 import Grid from "@material-ui/core/Grid";
 import Button from "@material-ui/core/Button";
-import withStyles from "@material-ui/core/styles/withStyles";
-import { authInitialProps } from "../lib/auth";
 import Router from "next/router";
+
 import PostFeed from "../components/index/PostFeed";
 import UserFeed from "../components/index/UserFeed";
+import withStyles from "@material-ui/core/styles/withStyles";
+import { authInitialProps } from "../lib/auth";
 
 const Index = ({ classes, auth }) => (
 	<main className={classes.root}>
 		{auth.user && auth.user._id ? (
-			//Auth user Page
+			// Auth User Page
 			<Grid container>
 				<Grid item xs={12} sm={12} md={7}>
 					<PostFeed auth={auth} />
@@ -31,6 +32,7 @@ const Index = ({ classes, auth }) => (
 				</Grid>
 			</Grid>
 		) : (
+			// Splash Page (UnAuth Page)
 			<Grid
 				justify="center"
 				alignItems="center"
@@ -38,8 +40,14 @@ const Index = ({ classes, auth }) => (
 				container
 				className={classes.heroContent}
 			>
-				<Typography component="h1" variant="h2" align="center" gutterBottom>
-					Reach Out
+				<Typography
+					component="h1"
+					variant="h2"
+					align="center"
+					color="textPrimary"
+					gutterBottom
+				>
+					A Better Social Network
 				</Typography>
 				<Typography
 					variant="h6"
@@ -47,7 +55,10 @@ const Index = ({ classes, auth }) => (
 					color="textSecondary"
 					component="p"
 				>
-					This is a much better Social Network Powered by Next JS
+					Lorem ipsum, dolor sit amet consectetur adipisicing elit. Maxime
+					nesciunt suscipit voluptas harum commodi fugiat ab, rem facilis alias
+					veritatis labore totam nihil! Distinctio veniam consectetur vitae
+					magni. Dolorem, necessitatibus.
 				</Typography>
 				<Button
 					className={classes.fabButton}
@@ -55,7 +66,7 @@ const Index = ({ classes, auth }) => (
 					color="primary"
 					onClick={() => Router.push("/signup")}
 				>
-					Join Us
+					Get Started
 				</Button>
 			</Grid>
 		)}

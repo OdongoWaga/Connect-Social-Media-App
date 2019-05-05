@@ -6,13 +6,26 @@ import Button from "@material-ui/core/Button";
 import withStyles from "@material-ui/core/styles/withStyles";
 import { authInitialProps } from "../lib/auth";
 
-class Index extends React.Component {
-	state = {};
 
-	render() {
-		return <div>Index</div>;
-	}
-}
+const Index =({classes, auth}) => (
+	<main className={classes.root}>
+	{auth.user && auth.user._id ? (
+		//Auth user Page
+		<div> Auth User Page </div> 
+	) : (
+		<Grid
+		justify="center"
+		alignItems="center"
+		direction="row"
+		container
+		className={classes.heroContent}>
+		<Typography component="h1" variant="h2" align="center" gutterBottom>
+		Reach Out
+		</Typography>
+
+		</Grid>
+	)}
+)
 
 const styles = (theme) => ({
 	root: {

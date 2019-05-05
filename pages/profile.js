@@ -14,6 +14,7 @@ import { authInitialProps } from "../lib/auth";
 import withStyles from "@material-ui/core/styles/withStyles";
 import { getUser } from "../lib/api";
 import Link from "next/link";
+import ProfileTabs from "../components/profile/ProfileTabs";
 import FollowUser from "../components/profile/FollowUser";
 import DeleteUser from "../components/profile/DeleteUser";
 

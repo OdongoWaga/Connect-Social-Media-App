@@ -17,7 +17,7 @@ import FaceTwoTone from "@material-ui/icons/FaceTwoTone";
 import EditSharp from "@material-ui/icons/EditSharp";
 import withStyles from "@material-ui/core/styles/withStyles";
 import { authInitialProps } from "../lib/auth";
-import { getAuthuser } from "../lib/api";
+import { getAuthuser, updateUser } from "../lib/api";
 
 class EditProfile extends React.Component {
 	state = {
@@ -26,11 +26,14 @@ class EditProfile extends React.Component {
 		email: "",
 		about: "",
 		avatar: "",
+		avatarPreview: "",
 		isLoading: true
 	};
 
 	componentDidMount() {
 		const { auth } = this.props;
+
+		this.userData = new FormData();
 
 		getAuthuser(auth.user._id)
 			.then((user) => {
@@ -45,9 +48,32 @@ class EditProfile extends React.Component {
 			});
 	}
 
+	handleChange = (e) => {
+		let inputValue;
+
+		if (e.target.name === "avatar") {
+			inputValue = e.target.files[0];
+			this.setState({
+				avatarPreview: this.createPreviewImage(inputValue)
+			});
+		} else {
+			this.userData.set(e.target.name, inputValue);
+			this.setState({ [e.target.name]: inputValue });
+		}
+	};
+
+	handleSubmit = (e) => {
+		e.preventDefault();
+		updateUser(this.state._id).then((updatedUser) => {
+			console.log(updatedUser);
+		});
+	};
+
+	createPreviewImage = (file) => URL.createObjectURL(file);
+
 	render() {
 		const { classes } = this.props;
-		const { name, email, avatar, about, isLoading } = this.state;
+		const { name, email, avatar, about, avatarPreview, isLoading } = this.state;
 
 		return (
 			<div className={classes.root}>
@@ -60,13 +86,16 @@ class EditProfile extends React.Component {
 					</Typography>
 
 					{/* Edit Profile Form */}
-					<form className={classes.form}>
+					<form onSubmit={this.handleSubmit} className={classes.form}>
 						{isLoading ? (
 							<Avatar className={classes.bigAvatar}>
 								<FaceTwoTone />
 							</Avatar>
 						) : (
-							<Avatar src={avatar} className={classes.bigAvatar} />
+							<Avatar
+								src={avatarPreview || avatar}
+								className={classes.bigAvatar}
+							/>
 						)}
 						<input
 							type="file"

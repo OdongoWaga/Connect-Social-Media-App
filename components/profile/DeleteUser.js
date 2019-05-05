@@ -7,7 +7,6 @@ import DialogContentText from "@material-ui/core/DialogContentText";
 import DialogTitle from "@material-ui/core/DialogTitle";
 import Delete from "@material-ui/icons/Delete";
 import { signoutUser } from "../../lib/auth";
-import Router from "next/router";
 import { deleteUser } from "../../lib/api";
 
 class DeleteUser extends React.Component {
@@ -24,8 +23,6 @@ class DeleteUser extends React.Component {
 		deleteUser(user._id)
 			.then(() => {
 				signoutUser();
-
-				Router.push("/signup");
 			})
 			.catch((err) => {
 				console.log(err);

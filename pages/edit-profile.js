@@ -76,7 +76,7 @@ class EditProfile extends React.Component {
 							onChange={this.handleChange}
 							className={classes.input}
 						/>
-						<label htmlFor="avatar">
+						<label htmlFor="avatar" className={classes.uploadButton}>
 							<Button variant="contained" color="secondary" component="span">
 								Upload Image <CloudUpload />
 							</Button>
@@ -110,6 +110,16 @@ class EditProfile extends React.Component {
 								onChange={this.handleChange}
 							/>
 						</FormControl>
+						<Button
+							type="submit"
+							fullWidth
+							disabled={isLoading}
+							variant="contained"
+							color="primary"
+							className={classes.submit}
+						>
+							Save
+						</Button>
 					</form>
 				</Paper>
 			</div>

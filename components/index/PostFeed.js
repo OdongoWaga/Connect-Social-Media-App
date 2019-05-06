@@ -1,11 +1,40 @@
-// import Typography from "@material-ui/core/Typography";
+import Typography from "@material-ui/core/Typography";
 import withStyles from "@material-ui/core/styles/withStyles";
+import NewPost from "./NewPost";
+import Post from "./Post";
 
 class PostFeed extends React.Component {
-	state = {};
+	state = {
+		posts: [],
+		text: "",
+		image: ""
+	};
+
+	handleChange = () => {};
 
 	render() {
-		return <div>PostFeed</div>;
+		const { classes, auth } = this.props;
+		const { text, image } = this.state;
+
+		return (
+			<div className={classes.root}>
+				<Typography
+					variant="h4"
+					component="h1"
+					align="center"
+					color="primary"
+					className={classes.title}
+				>
+					Post Feed
+				</Typography>
+				<NewPost
+					auth={auth}
+					text={text}
+					image={image}
+					handleChange={this.handleChange}
+				/>
+			</div>
+		);
 	}
 }
 

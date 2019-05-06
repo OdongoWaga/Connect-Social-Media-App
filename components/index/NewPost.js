@@ -27,9 +27,9 @@ const NewPost = ({
 					{auth.user.name}
 				</Typography>
 			}
-			className={classes.CardHeader}
+			className={classes.cardHeader}
 		/>
-		<CardContent className={classes.CardContent}>
+		<CardContent className={classes.cardContent}>
 			<TextField
 				label="Add a status"
 				value={text}
@@ -58,7 +58,7 @@ const NewPost = ({
 					<AddAPhoto />
 				</IconButton>
 			</label>
-			<span> {image && image.name} </span>
+			<span>{image && image.name}</span>
 		</CardContent>
 		<CardActions className={classes.cardActions}>
 			<Button

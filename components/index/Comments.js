@@ -12,35 +12,38 @@ class Comments extends React.Component {
 		text: ""
 	};
 
-	handleChange = (e) => {
-		this.setState({ text: e.target.value });
+	handleChange = (event) => {
+		this.setState({ text: event.target.value });
 	};
 
-	handleSubmit = (e) => {
+	handleSubmit = (event) => {
 		const { text } = this.state;
 		const { postId, handleAddComment } = this.props;
 
-		e.preventDefault();
-
+		event.preventDefault();
 		handleAddComment(postId, text);
 		this.setState({ text: "" });
 	};
+
 	showComment = (comment) => {
-		const { postId, auth, classes } = this.props;
-		const { text } = this.state;
+		const { postId, auth, classes, handleDeleteComment } = this.props;
 		const isCommentCreator = comment.postedBy._id === auth.user._id;
 
 		return (
 			<div>
 				<Link href={`/profile/${comment.postedBy._id}`}>
-					<a> {comment.postedBy.name} </a>
+					<a>{comment.postedBy.name}</a>
 				</Link>
 				<br />
 				{comment.text}
 				<span className={classes.commentDate}>
 					{comment.createdAt}
 					{isCommentCreator && (
-						<Delete color="secondary" className={classes.commentDelete} />
+						<Delete
+							color="secondary"
+							className={classes.commentDelete}
+							onClick={() => handleDeleteComment(postId, comment)}
+						/>
 					)}
 				</span>
 			</div>
@@ -61,11 +64,11 @@ class Comments extends React.Component {
 					title={
 						<form onSubmit={this.handleSubmit}>
 							<FormControl margin="normal" required fullWidth>
-								<InputLabel htmlFor="add-comment"> Add Comment </InputLabel>
+								<InputLabel htmlFor="add-comment">Add comments</InputLabel>
 								<Input
 									id="add-comment"
 									name="text"
-									placeholder="Reply To this Post"
+									placeholder="Reply to this post"
 									value={text}
 									onChange={this.handleChange}
 								/>
@@ -76,7 +79,6 @@ class Comments extends React.Component {
 				/>
 
 				{/* Comments */}
-
 				{comments.map((comment) => (
 					<CardHeader
 						key={comment._id}

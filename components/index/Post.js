@@ -14,19 +14,72 @@ import FavoriteBorder from "@material-ui/icons/FavoriteBorder";
 import withStyles from "@material-ui/core/styles/withStyles";
 import Link from "next/link";
 
-class Post extends React.Component {
-	state = {};
+import Comments from "./Comments";
+
+class Post extends React.PureComponent {
+	state = {
+		isLiked: false,
+		numLikes: 0,
+		comments: []
+	};
+
+	componentDidMount() {
+		this.setState({
+			isLiked: this.checkLiked(this.props.post.likes),
+			numLikes: this.props.post.likes.length,
+			comments: this.props.post.comments
+		});
+	}
+
+	componentDidUpdate(prevProps) {
+		if (prevProps.post.likes.length !== this.props.post.likes.length) {
+			this.setState({
+				isLiked: this.checkLiked(this.props.post.likes),
+				numLikes: this.props.post.likes.length
+			});
+		}
+
+		if (prevProps.post.comments.length !== this.props.post.comments.length) {
+			this.setState({
+				comments: this.props.post.comments
+			});
+		}
+	}
+
+	checkLiked = (likes) => likes.includes(this.props.auth.user._id);
 
 	render() {
-		const { classes, post, auth } = this.props;
+		const {
+			classes,
+			post,
+			auth,
+			isDeletingPost,
+			handleDeletePost,
+			handleToggleLike,
+			handleAddComment,
+			handleDeleteComment
+		} = this.props;
+		const { isLiked, numLikes, comments } = this.state;
+		const isPostCreator = post.postedBy._id === auth.user._id;
+
 		return (
 			<Card className={classes.card}>
 				{/* Post Header */}
 				<CardHeader
 					avatar={<Avatar src={post.postedBy.avatar} />}
+					action={
+						isPostCreator && (
+							<IconButton
+								disabled={isDeletingPost}
+								onClick={() => handleDeletePost(post)}
+							>
+								<DeleteTwoTone color="secondary" />
+							</IconButton>
+						)
+					}
 					title={
 						<Link href={`/profile/${post.postedBy._id}`}>
-							<a> {post.postedBy.name} </a>
+							<a>{post.postedBy.name}</a>
 						</Link>
 					}
 					subheader={post.createdAt}
@@ -36,7 +89,7 @@ class Post extends React.Component {
 					<Typography variant="body1" className={classes.text}>
 						{post.text}
 					</Typography>
-					{/* {Post Image} */}
+					{/* Post Image */}
 					{post.image && (
 						<div className={classes.imageContainer}>
 							<img className={classes.image} src={post.image} />
@@ -44,21 +97,36 @@ class Post extends React.Component {
 					)}
 				</CardContent>
 
-				{/* {Post Actions} */}
+				{/* Post Actions */}
 				<CardActions>
-					<IconButton className={classes.button}>
-						<Badge badgeContent={0} color="secondary">
-							<FavoriteBorder className={classes.favoriteIcon} />
+					<IconButton
+						onClick={() => handleToggleLike(post)}
+						className={classes.button}
+					>
+						<Badge badgeContent={numLikes} color="secondary">
+							{isLiked ? (
+								<Favorite className={classes.favoriteIcon} />
+							) : (
+								<FavoriteBorder className={classes.favoriteIcon} />
+							)}
 						</Badge>
 					</IconButton>
 					<IconButton className={classes.button}>
-						<Badge badgeContent={0} color="primary">
+						<Badge badgeContent={comments.length} color="primary">
 							<Comment className={classes.commentIcon} />
 						</Badge>
 					</IconButton>
 				</CardActions>
 				<Divider />
-				{/* {Comments Area} */}
+
+				{/* Comments Area */}
+				<Comments
+					auth={auth}
+					postId={post._id}
+					comments={comments}
+					handleAddComment={handleAddComment}
+					handleDeleteComment={handleDeleteComment}
+				/>
 			</Card>
 		);
 	}
